@@ -1,75 +1,72 @@
-# React + TypeScript + Vite
+# Tic-Tac-Toe
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A two-player Tic-Tac-Toe game for a single device, built with React and TypeScript. A learning project from the **React — The Complete Guide** course.
 
-Currently, two official plugins are available:
+<p align="center">
+  <img src="public/game-logo.png" alt="Tic-Tac-Toe" width="160" />
+</p>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- 3×3 board, players take turns (**X** goes first)
+- Highlights the player whose turn it is
+- Editable player names (**Edit** / **Save** buttons)
+- Winner detection across all 8 winning combinations (3 rows, 3 columns, 2 diagonals)
+- Draw detection when the board is full
+- **Game Over** screen showing the winner's name, with a **Restart!** button to start a new game
+- Occupied squares are disabled and can't be played again
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech Stack
 
-## Expanding the ESLint configuration
+- [React 19](https://react.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vite.dev/)
+- ESLint
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Getting Started
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Requires [Node.js](https://nodejs.org/) (LTS recommended).
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+git clone https://github.com/alinahusak/react-tic-tac-toe.git
+cd react-tic-tac-toe
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+Then open the URL printed by Vite in your browser (http://localhost:5173 by default).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Scripts
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| Command           | Description                                            |
+| ----------------- | ------------------------------------------------------ |
+| `npm run dev`     | Start the dev server with hot reload                   |
+| `npm run build`   | Type-check and build the production bundle into `dist/` |
+| `npm run preview` | Preview the production build locally                   |
+| `npm run lint`    | Run ESLint                                             |
+
+## Project Structure
 
 ```
+src/
+├── App.tsx                  # Game state, turn logic, winner/draw detection
+├── components/
+│   ├── GameBoard.tsx        # The 3×3 game board
+│   ├── Player.tsx           # Player card with editable name
+│   ├── GameOver.tsx         # Game over screen and restart
+│   └── Log.tsx              # Placeholder for a move log (not used yet)
+├── winning-combinations.ts  # List of winning combinations
+├── main.tsx                 # Entry point
+└── index.css                # Styles
+```
+
+## How It Works
+
+The only piece of game state is the `gameTurns` array in `App.tsx`. Everything else is derived from it on each render:
+
+- **active player** — the opposite of whoever made the last move;
+- **game board** — rebuilt from an empty board by replaying the turns;
+- **winner** — checked against every combination in `winning-combinations.ts`;
+- **draw** — 9 moves made and no winner.
+
+Restarting the game simply clears the turns array.
